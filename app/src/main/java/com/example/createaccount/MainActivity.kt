@@ -12,7 +12,6 @@ import androidx.compose.runtime.*
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.input.KeyboardType
@@ -42,56 +41,56 @@ class MainActivity : ComponentActivity() {
 fun CreateAccountScreen() {
     val context = LocalContext.current
 
-    // Remember state for all inputs
     var firstName by rememberSaveable { mutableStateOf("") }
     var lastName by rememberSaveable { mutableStateOf("") }
     var username by rememberSaveable { mutableStateOf("") }
     var password by rememberSaveable { mutableStateOf("") }
     var gender by rememberSaveable { mutableStateOf("") }
     var agreed by rememberSaveable { mutableStateOf(false) }
-
-    // Dark / Light mode toggle
     var isDarkMode by rememberSaveable { mutableStateOf(false) }
 
-    val gradientBackground = if (isDarkMode) {
-        Brush.verticalGradient(
-            colors = listOf(Color(0xFF2C3E50), Color(0xFF4CA1AF))
-        )
-    } else {
-        Brush.verticalGradient(
-            colors = listOf(Color(0xFFB3E5FC), Color(0xFF81D4FA))
-        )
-    }
+    val backgroundColor = if (isDarkMode) Color(0xFF132440) else Color(0xFF3B9797)
+
+    // Warna kontras untuk textfield
+    val textFieldColors = OutlinedTextFieldDefaults.colors(
+        focusedBorderColor = Color.White,
+        unfocusedBorderColor = Color.White.copy(alpha = 0.6f),
+        focusedLabelColor = Color.White,
+        unfocusedLabelColor = Color.White.copy(alpha = 0.8f),
+        cursorColor = Color.White,
+        focusedTextColor = Color.White,
+        unfocusedTextColor = Color.White,
+        focusedContainerColor = Color.White.copy(alpha = 0.1f),
+        unfocusedContainerColor = Color.White.copy(alpha = 0.1f)
+    )
 
     Column(
         modifier = Modifier
             .fillMaxSize()
-            .background(gradientBackground)
+            .background(backgroundColor)
             .padding(20.dp),
         horizontalAlignment = Alignment.CenterHorizontally,
         verticalArrangement = Arrangement.Center
     ) {
-        // 🌗 Light/Dark Mode Toggle
+        // 🌗 Toggle Mode
         Row(
             modifier = Modifier.fillMaxWidth(),
             horizontalArrangement = Arrangement.End,
             verticalAlignment = Alignment.CenterVertically
         ) {
-            Text(if (isDarkMode) "Dark Mode" else "Light Mode")
-            Switch(
-                checked = isDarkMode,
-                onCheckedChange = { isDarkMode = it }
-            )
+            Text(if (isDarkMode) "Dark Mode" else "Light Mode", color = Color.White)
+            Switch(checked = isDarkMode, onCheckedChange = { isDarkMode = it })
         }
 
         Text(
             text = "Create Account",
             style = MaterialTheme.typography.headlineMedium,
+            color = Color.White,
             textAlign = TextAlign.Center,
             modifier = Modifier.padding(bottom = 24.dp)
         )
 
-        // First & Last Name
+        // 🔹 First & Last Name
         Row(
             modifier = Modifier.fillMaxWidth(),
             horizontalArrangement = Arrangement.spacedBy(8.dp)
@@ -100,13 +99,15 @@ fun CreateAccountScreen() {
                 value = firstName,
                 onValueChange = { firstName = it },
                 label = { Text("First Name") },
-                modifier = Modifier.weight(1f)
+                modifier = Modifier.weight(1f),
+                colors = textFieldColors
             )
             OutlinedTextField(
                 value = lastName,
                 onValueChange = { lastName = it },
                 label = { Text("Last Name") },
-                modifier = Modifier.weight(1f)
+                modifier = Modifier.weight(1f),
+                colors = textFieldColors
             )
         }
 
@@ -116,51 +117,42 @@ fun CreateAccountScreen() {
             value = username,
             onValueChange = { username = it },
             label = { Text("Username") },
-            modifier = Modifier.fillMaxWidth()
+            modifier = Modifier.fillMaxWidth(),
+            colors = textFieldColors
         )
 
         Spacer(modifier = Modifier.height(12.dp))
 
-        // Password (selalu tersembunyi)
         OutlinedTextField(
             value = password,
             onValueChange = { password = it },
             label = { Text("Password") },
             modifier = Modifier.fillMaxWidth(),
             visualTransformation = PasswordVisualTransformation(),
-            keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Password)
+            keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Password),
+            colors = textFieldColors
         )
 
         Spacer(modifier = Modifier.height(16.dp))
 
-        Text(text = "Gender:")
+        Text("Gender:", color = Color.White)
         Row(verticalAlignment = Alignment.CenterVertically) {
-            RadioButton(
-                selected = gender == "Male",
-                onClick = { gender = "Male" }
-            )
-            Text(text = "Male")
+            RadioButton(selected = gender == "Male", onClick = { gender = "Male" })
+            Text("Male", color = Color.White)
             Spacer(modifier = Modifier.width(12.dp))
-            RadioButton(
-                selected = gender == "Female",
-                onClick = { gender = "Female" }
-            )
-            Text(text = "Female")
+            RadioButton(selected = gender == "Female", onClick = { gender = "Female" })
+            Text("Female", color = Color.White)
         }
 
         Spacer(modifier = Modifier.height(16.dp))
 
         Row(verticalAlignment = Alignment.CenterVertically) {
-            Checkbox(
-                checked = agreed,
-                onCheckedChange = { agreed = it }
-            )
-            Text("I agree to the Terms and Conditions")
+            Checkbox(checked = agreed, onCheckedChange = { agreed = it })
+            Text("I agree to the Terms and Conditions", color = Color.White)
         }
 
         Spacer(modifier = Modifier.height(20.dp))
 
-        // Buttons
         Row(
             modifier = Modifier.fillMaxWidth(),
             horizontalArrangement = Arrangement.SpaceEvenly
@@ -201,6 +193,7 @@ fun CreateAccountScreen() {
         }
     }
 }
+
 
 @Preview(showBackground = true)
 @Composable
